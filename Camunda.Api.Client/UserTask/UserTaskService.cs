@@ -22,6 +22,9 @@ namespace Camunda.Api.Client.UserTask
         public QueryResource<TaskQuery, UserTaskInfo> Query(TaskQuery query = null)
             => new QueryResource<TaskQuery, UserTaskInfo>(_api, query);
 
+        public QueryResource<TaskQueryPost, UserTaskInfo> QueryPost(TaskQueryPost query = null)
+            => new QueryResource<TaskQueryPost, UserTaskInfo>(_api, query);
+
         public Task Create(UserTask task) => _api.CreateTask(task);
     }
 }

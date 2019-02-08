@@ -30,6 +30,6 @@ namespace Camunda.Api.Client
         /// Get number of items that fulfill given parameters.
         /// </summary>
         /// <returns></returns>
-        public async Task<int> Count() => (await _api.GetListCount(_query)).Count;
+        public Task<CountResult> Count() => _api.GetListCount(_query);
     }
 }
