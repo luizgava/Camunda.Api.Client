@@ -12,7 +12,7 @@ namespace Camunda.Api.Client.UserTask
         Task<UserTaskInfo> Get(string id);
 
         [Post("/task")]
-        Task<List<UserTaskInfo>> GetList([Body] TaskQuery query, int? firstResult, int? maxResults);
+        Task<List<UserTaskInfo>> GetList([Body] TaskQuery query, [Query]int? firstResult, [Query]int? maxResults);
 
         [Post("/task/count")]
         Task<CountResult> GetListCount([Body] TaskQuery query);
