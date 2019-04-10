@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Reflection;
 
 namespace Camunda.Api.Client
@@ -224,6 +225,61 @@ namespace Camunda.Api.Client
             var val = new VariableValue();
             val.SetTypedValue(value);
             return val;
+        }
+
+        /// <summary>
+        /// Value instantiation. Creates file variable with content of file specified by <paramref name="path"/>
+        /// </summary>
+        /// <param name="path">Local path to the file.</param>
+        /// <param name="mimeType">The MIME type of the file that is being uploaded. Use constant from <see cref="MediaTypes"/></param>
+        /// <param name="charset">The encoding of the file that is being uploaded.</param>
+        public static VariableValue FromFile(string path, string mimeType, string charset = null)
+        {
+            return FromFile(File.ReadAllBytes(path), Path.GetFileName(path), mimeType, charset);
+        }
+
+        /// <summary>
+        /// Value instantiation. Creates file variable from <paramref name="content"/>
+        /// </summary>
+        /// <param name="mimeType">The MIME type of the file that is being uploaded. Use constant from <see cref="MediaTypes"/></param>
+        /// <param name="fileName">The name of the file. This is not the variable name but the name that will be used when downloading the file again.</param>
+        /// <param name="charset">The encoding of the file that is being uploaded.</param>
+        /// <param name="content">Content of the file that is being uploaded.</param>
+        public static VariableValue FromFile(byte[] content, string fileName, string mimeType, string charset = null)
+        {
+            var val = new VariableValue()
+            {
+                Type = VariableType.File,
+                Value = Convert.ToBase64String(content),
+                ValueInfo = new Dictionary<string, object>()
+                {
+                    [ValueInfoFileName] = fileName,
+                    [ValueInfoFileMimeType] = mimeType,
+                    [ValueInfoFileEncoding] = charset ?? "",
+                }
+            };
+
+            return val;
+        }
+
+        /// <summary>
+        /// Value instantiation. Creates text file variable with MIME text/plain
+        /// </summary>
+        /// <param name="path">Local path to the file.</param>
+        /// <param name="charset">The encoding of the file that is being uploaded.</param>
+        public static VariableValue FromTextFile(string path, string charset = "utf-8")
+        {
+            return FromFile(File.ReadAllBytes(path), Path.GetFileName(path), MediaTypes.Text.Plain, charset);
+        }
+
+        /// <summary>
+        /// Value instantiation. Creates binary file variable.
+        /// </summary>
+        /// <param name="path">Local path to the file.</param>
+        /// <param name="mimeType">The MIME type of the file that is being uploaded. Use constant from <see cref="MediaTypes"/></param>
+        public static VariableValue FromBinaryFile(string path, string mimeType = MediaTypes.Application.OctetStream)
+        {
+            return FromFile(File.ReadAllBytes(path), Path.GetFileName(path), mimeType, null);
         }
 
         /// <summary>
