@@ -59,5 +59,9 @@
         /// </summary>
         public HistoricDetailService Detail => new HistoricDetailService(_api.DetailApi.Value);
 
+        /// <summary>
+        /// Task
+        /// </summary>
+        public HistoricTaskService Tasks => new HistoricTaskService(_api.TaskApi.Value);
     }
 }
